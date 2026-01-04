@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #d32f2f; /* Red Theme */
+      --secondary: #1a73e8; /* Blue Theme */
+      --accent: #ffc107; /* Warning Theme */
+    }
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      background: linear-gradient(135deg, #eef2f3 0%, #8e9eab 100%);
+      margin: 0; padding: 20px; 
+    }
+    .container { 
+      background: white; padding: 30px; border-radius: 20px; 
+      max-width: 600px; margin: auto; 
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      border-top: 10px solid var(--primary);
+    }
+    .header { text-align: center; margin-bottom: 25px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
+    .header h1 { color: var(--primary); margin: 0; font-size: 28px; }
+    
+    /* निर्देश बॉक्स - बिल्कुल वैसा ही जैसा आपने चाहा */
+    .notice-box { 
+      background-color: #fff8e1; border-left: 6px solid var(--accent); 
+      padding: 15px; border-radius: 8px; font-size: 14px; 
+      color: #333; margin-bottom: 30px; 
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    .notice-title { 
+      font-weight: bold; color: #b00020; display: block; 
+      margin-bottom: 10px; font-size: 16px; text-decoration: underline; 
+    }
+    .notice-box ul { padding-left: 20px; margin: 0; }
+    .notice-box li { margin-bottom: 8px; line-height: 1.4; }
+
+    .form-group { margin-bottom: 18px; }
+    label { font-weight: 600; margin-bottom: 5px; display: block; color: #444; font-size: 14px; }
+    .required-star { color: red; }
+    
+    input, select, textarea { 
+      width: 100%; padding: 12px; border: 1px solid #ccc; 
+      border-radius: 8px; box-sizing: border-box; 
+      font-family: inherit; transition: 0.3s;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--secondary); outline: none; background: #f0f7ff; }
+    
+    .hidden { display: none; }
+    
+    button { 
+      width: 100%; background: linear-gradient(to right, #d32f2f, #f44336); 
+      color: white; padding: 16px; border: none; border-radius: 8px; 
+      cursor: pointer; font-size: 18px; font-weight: 600; 
+      box-shadow: 0 4px 10px rgba(211, 47, 47, 0.3);
+    }
+    button:hover { opacity: 0.95; transform: translateY(-1px); }
+    
+    .loader { display: none; width: 22px; height: 22px; border: 3px solid #fff; border-radius: 50%; border-top: 3px solid transparent; animation: spin 1s linear infinite; margin: auto; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div class="container" id="form-container">
+  <div class="header">
+    <h1>SUPREME FOUNDATION</h1>
+    <p>Jaswantgarh | Recruitment Application</p>
+  </div>
+
+  <div class="notice-box">
+    <span class="notice-title">महत्वपूर्ण निर्देश (फॉर्म भरने से पहले अवश्य पढ़ें):</span>
+    <ul>
+      <li>यह फॉर्म सुप्रीम फाउण्डेशन की वर्तमान रिक्त पोस्ट के आधार पर पद चुनने हेतु है।</li>
+      <li>वेकेन्सी भरने पर संबंधित पद फॉर्म से स्वतः हट जाएगा।</li>
+      <li>यदि आपने पहले फाउण्डेशन में परीक्षा दी है, तो अपना पूरा रोल नम्बर भरें और उसी ग्रेड व विषय में आवेदन करें। विद्यालय व लोकेशन बदल सकते हैं।</li>
+      <li>नए ग्रेड के लिए आपको नया अभ्यर्थी फॉर्म भरना होगा।</li>
+      <li>नए अभ्यर्थी अपना फॉर्म भरकर छोड़ दें—पद खाली रहने पर वेकेन्सी आयोजित की जाएगी एवं आपको सूचना दे दी जाएगी।</li>
+      <li>नए अभ्यर्थियों को बार-बार फॉर्म भरने की आवश्यकता नहीं है।</li>
+      <li style="color:#d32f2f; font-weight:bold;">⚠️ Note: Please fill the form details in English.</li>
+    </ul>
+  </div>
+
+  <form id="myForm">
+    <div class="form-group">
+      <label>Select Location <span class="required-star">*</span></label>
+      <select id="location" name="location" required onchange="filterGrades()">
+        <option value="" disabled selected>Choose location...</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Candidate Name <span class="required-star">*</span></label>
+      <input type="text" name="cName" placeholder="Candidate's Full Name" required>
+    </div>
+
+    <div class="form-group">
+      <label>Father's Name <span class="required-star">*</span></label>
+      <input type="text" name="fName" placeholder="Father's Name" required>
+    </div>
+
+    <div class="form-group">
+      <label>Date of Birth <span class="required-star">*</span></label>
+      <input type="date" name="dob" required>
+    </div>
+
+    <div class="form-group">
+      <label>Full Address <span class="required-star">*</span></label>
+      <textarea name="address" rows="2" placeholder="Village/City, Tehsil, District" required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Mobile Number <span class="required-star">*</span></label>
+      <input type="tel" name="mobile" pattern="[0-9]{10}" placeholder="10 Digit Number" required>
+    </div>
+
+    <div class="form-group">
+      <label>Aadhaar Number <span class="required-star">*</span></label>
+      <input type="text" name="aadhaar" pattern="[0-9]{12}" maxlength="12" placeholder="12 Digit Aadhaar" required>
+    </div>
+
+    <div class="form-group">
+      <label>PAN Card Number <span class="required-star">*</span></label>
+      <input type="text" name="pan" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" maxlength="10" style="text-transform:uppercase" placeholder="ABCDE1234F" required>
+    </div>
+
+    <div class="form-group">
+      <label>SBI Bank Account Number (Optional)</label>
+      <input type="text" name="bankAcc" placeholder="Account Number">
+    </div>
+
+    <div class="form-group">
+      <label>Upload Photo <span class="required-star">*</span></label>
+      <input type="file" id="photoFile" accept="image/*" required>
+    </div>
+
+    <div class="form-group">
+      <label>Have you appeared in previous exams? <span class="required-star">*</span></label>
+      <select name="examGiven" id="examGiven" onchange="toggleRollNo()">
+        <option value="No">No (New Candidate)</option>
+        <option value="Yes">Yes (Already Appeared)</option>
+      </select>
+    </div>
+
+    <div id="rollNoDiv" class="hidden form-group">
+      <label>Old Roll Number <span class="required-star">*</span></label>
+      <input type="text" name="rollNo" id="rollNoInput" placeholder="e.g. AUG24-1234">
+    </div>
+
+    <div class="form-group">
+      <label>Apply For Grade <span class="required-star">*</span></label>
+      <select id="grade" name="grade" disabled required onchange="filterSubjects()"></select>
+    </div>
+
+    <div class="form-group">
+      <label>Subject <span class="required-star">*</span></label>
+      <select id="subject" name="subject" disabled required onchange="filterSchools()"></select>
+    </div>
+
+    <div class="form-group">
+      <label>Select School <span class="required-star">*</span></label>
+      <select id="school" name="school" disabled required></select>
+    </div>
+
+    <button type="button" id="submitBtn" onclick="handleFormSubmit()">
+      <span id="btnText">SUBMIT APPLICATION</span>
+      <div class="loader" id="loader"></div>
+    </button>
+  </form>
+</div>
+
+<div class="container hidden" id="success-view" style="text-align:center;">
+  <div style="font-size: 60px; color: #4CAF50;">✓</div>
+  <h2 style="color: var(--primary);">Application Submitted!</h2>
+  <p>आपका आवेदन सफलतापूर्वक सबमिट कर दिया गया है।</p>
+  <button onclick="location.reload()">Submit Another Response</button>
+</div>
+
+<script>
+  var allData = [];
+  window.onload = function() {
+    google.script.run.withSuccessHandler(function(data) {
+      allData = data;
+      var locSelect = document.getElementById("location");
+      var locs = [...new Set(allData.map(i => i.loc))].sort();
+      locs.forEach(l => locSelect.add(new Option(l, l)));
+    }).getVacantData();
+  };
+
+  function filterGrades() {
+    var loc = document.getElementById("location").value;
+    var gradeSelect = document.getElementById("grade");
+    gradeSelect.innerHTML = '<option value="">Select Grade</option>';
+    gradeSelect.disabled = false;
+    var grades = [...new Set(allData.filter(i => i.loc === loc).map(i => i.grade))].sort();
+    grades.forEach(g => gradeSelect.add(new Option(g, g)));
+  }
+
+  function filterSubjects() {
+    var loc = document.getElementById("location").value;
+    var grd = document.getElementById("grade").value;
+    var subSelect = document.getElementById("subject");
+    subSelect.innerHTML = '<option value="">Select Subject</option>';
+    subSelect.disabled = false;
+    var subs = [...new Set(allData.filter(i => i.loc === loc && i.grade == grd).map(i => i.sub))].sort();
+    subs.forEach(s => subSelect.add(new Option(s, s)));
+  }
+
+  function filterSchools() {
+    var loc = document.getElementById("location").value;
+    var grd = document.getElementById("grade").value;
+    var sub = document.getElementById("subject").value;
+    var schSelect = document.getElementById("school");
+    schSelect.innerHTML = '<option value="">Select School</option>';
+    schSelect.disabled = false;
+    var schs = [...new Set(allData.filter(i => i.loc === loc && i.grade == grd && i.sub === sub).map(i => i.school))];
+    schs.forEach(s => schSelect.add(new Option(s, s)));
+  }
+
+  function toggleRollNo() {
+    var val = document.getElementById("examGiven").value;
+    var div = document.getElementById("rollNoDiv");
+    div.classList.toggle("hidden", val !== "Yes");
+    document.getElementById("rollNoInput").required = (val === "Yes");
+  }
+
+  function handleFormSubmit() {
+    var form = document.getElementById("myForm");
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    document.getElementById("submitBtn").disabled = true;
+    document.getElementById("btnText").style.display = "none";
+    document.getElementById("loader").style.display = "block";
+
+    var fileInput = document.getElementById("photoFile");
+    var file = fileInput.files[0];
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+      var obj = {
+        location: form.location.value,
+        cName: form.cName.value,
+        fName: form.fName.value,
+        dob: form.dob.value,
+        address: form.address.value,
+        mobile: form.mobile.value,
+        aadhaar: form.aadhaar.value,
+        pan: form.pan.value,
+        bankAcc: form.bankAcc.value,
+        examGiven: form.examGiven.value,
+        rollNo: form.rollNo.value,
+        grade: form.grade.value,
+        subject: form.subject.value,
+        school: form.school.value,
+        photoFile: {
+          blob: e.target.result.split(',')[1],
+          mimeType: file.type,
+          name: form.cName.value + "_photo"
+        }
+      };
+      
+      google.script.run.withSuccessHandler(function(res) {
+        if(res === "SUCCESS") {
+          document.getElementById("form-container").classList.add("hidden");
+          document.getElementById("success-view").classList.remove("hidden");
+        } else {
+          alert("Error: " + res);
+          resetBtn();
+        }
+      }).processForm(obj);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function resetBtn() {
+    document.getElementById("submitBtn").disabled = false;
+    document.getElementById("btnText").style.display = "block";
+    document.getElementById("loader").style.display = "none";
+  }
+</script>
+</body>
+</html>
